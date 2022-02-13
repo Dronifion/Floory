@@ -35,16 +35,24 @@ public class Player : MonoBehaviour
         //When player's character hits normal floor object with collision
         if (other.gameObject.tag == "Normal")
         {
-            Debug.Log("Hit normal floor");
-            //Set the currentFloor object to the normal floor object
-            currentFloor = other.gameObject;
+            //Only set the currentFloor object when character hits the horizontal flat surface
+            if (other.contacts[0].normal == new Vector2(0f,1f))
+            {
+                Debug.Log("Hit normal floor");
+                //Set the currentFloor object to the normal floor object
+                currentFloor = other.gameObject;
+            }
         }   
         //When player's character hits nails floor object with collision
         else if (other.gameObject.tag == "Nails")
         {
-            Debug.Log("Hit nails floor");
-            //Set the currentFloor object to the nails floor object
-            currentFloor = other.gameObject;
+            //Only set the currentFloor object when character hits the horizontal flat surface
+            if (other.contacts[0].normal == new Vector2(0f,1f))
+            {
+                Debug.Log("Hit nails floor");
+                //Set the currentFloor object to the nails floor object
+                currentFloor = other.gameObject;
+            }
         }         
         //When player's character hits ceiling object with collision
         else if (other.gameObject.tag == "Ceiling")
