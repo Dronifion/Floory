@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class Player : MonoBehaviour
     [SerializeField] int MaxHp; //Character's maximum HP
     [SerializeField] Text LifeText; //Game Life
     [SerializeField] Text ScoreText; //Game Score
-    GameObject currentFloor; //To store current floor object
+    [SerializeField] GameObject replayButton; //The replay button to be display when the character is dead
+    GameObject currentFloor; //To store current floor object    
     int Score = 0; //To record game score
     float scoreTime = 0f; //Use to calculate score with time passed in game
 
@@ -54,7 +56,6 @@ public class Player : MonoBehaviour
             //Only set the currentFloor object when character hits the horizontal flat surface
             if (other.contacts[0].normal == new Vector2(0f,1f))
             {
-                Debug.Log("Hit normal floor");
                 //Set the currentFloor object to the normal floor object
                 currentFloor = other.gameObject;
                 //Add 1 to Hp
@@ -67,7 +68,6 @@ public class Player : MonoBehaviour
             //Only set the currentFloor object when character hits the horizontal flat surface
             if (other.contacts[0].normal == new Vector2(0f,1f))
             {
-                Debug.Log("Hit nails floor");
                 //Set the currentFloor object to the nails floor object
                 currentFloor = other.gameObject;
                 //Subtract 3 from Hp
@@ -78,7 +78,6 @@ public class Player : MonoBehaviour
         //When player's character hits ceiling object with collision
         else if (other.gameObject.tag == "Ceiling")
         {
-            Debug.Log("Hit ceiling");
             //Disable the character's collider function
             currentFloor.GetComponent<BoxCollider2D>().enabled = false;
             //Subtract 3 from Hp
@@ -92,7 +91,7 @@ public class Player : MonoBehaviour
         //When player's character falls down and hits by triggering the death line
         if (other.gameObject.tag == "DeathLine")
         {
-            Debug.Log("Die");
+            Die();
         }   
     }
 
@@ -110,6 +109,7 @@ public class Player : MonoBehaviour
         else if (Hp <= 0 )
         {
             Hp = 0;
+            Die();
         }
 
         //Display current HP on scene
@@ -127,5 +127,21 @@ public class Player : MonoBehaviour
             scoreTime = 0f;
             ScoreText.text = "Floor " + Score.ToString();
         }
+    }
+
+    void Die() 
+    {
+        //End the game
+        Time.timeScale = 0f; 
+        //Display replay button
+        replayButton.SetActive(true); 
+    }
+
+    public void Replay()
+    {
+        //Restart the game
+        Time.timeScale = 1f;
+        //Reload the starting scene        
+        SceneManager.LoadScene("SampleScene");
     }
 }
