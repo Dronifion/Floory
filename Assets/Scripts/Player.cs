@@ -5,11 +5,13 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 5f;    
+    [SerializeField] int Hp; //Character's HP
     GameObject currentFloor; //To store current floor object
+
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Start the game!");
+        Hp = 10;
     }
 
     // Update is called once per frame
@@ -41,6 +43,8 @@ public class Player : MonoBehaviour
                 Debug.Log("Hit normal floor");
                 //Set the currentFloor object to the normal floor object
                 currentFloor = other.gameObject;
+                //Add 1 to Hp
+                ModifyHp(1);
             }
         }   
         //When player's character hits nails floor object with collision
@@ -52,6 +56,9 @@ public class Player : MonoBehaviour
                 Debug.Log("Hit nails floor");
                 //Set the currentFloor object to the nails floor object
                 currentFloor = other.gameObject;
+                //Subtract 3 from Hp
+                ModifyHp(-3);
+
             }
         }         
         //When player's character hits ceiling object with collision
@@ -60,6 +67,8 @@ public class Player : MonoBehaviour
             Debug.Log("Hit ceiling");
             //Disable the character's collider function
             currentFloor.GetComponent<BoxCollider2D>().enabled = false;
+            //Subtract 3 from Hp
+            ModifyHp(-3);
         }         
 
     }
@@ -71,5 +80,22 @@ public class Player : MonoBehaviour
         {
             Debug.Log("Die");
         }   
+    }
+
+    void ModifyHp(int num)
+    {
+        //Modify current HP
+        Hp += num;
+
+        //Max Hp = 10
+        if (Hp > 10)
+        {
+            Hp = 10;
+        }
+        //Min Hp = 0
+        else if (Hp <= 0 )
+        {
+            Hp = 0;
+        }
     }
 }
